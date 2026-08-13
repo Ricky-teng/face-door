@@ -1,0 +1,6 @@
+node_modules
+dist
+server/data.json
+.git
+.claude
+recognizer/env

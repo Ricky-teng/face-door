@@ -1,0 +1,21 @@
+{
+  "name": "face-door",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "server": "node server/index.js",
+    "recognizer": "C:/fbench/env/Scripts/python.exe recognizer/app.py",
+    "start": "npm run build && node server/index.js"
+  },
+  "devDependencies": {
+    "vite": "^8.2.0"
+  },
+  "dependencies": {
+    "@vladmandic/human": "^3.3.6",
+    "express": "^5.2.1"
+  }
+}

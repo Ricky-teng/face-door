@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="theme-color" content="#0b1220">
+
+  <title>FaceGuard｜智慧門禁</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+
+<body>
+
+  <!-- =========================
+       Sidebar
+  ========================== -->
+
+  <aside class="sidebar">
+
+    <div class="brand">
+      <div class="brand-icon">
+        <span>⌁</span>
+      </div>
+
+      <div>
+        <div class="brand-name">
+          FaceGuard
+        </div>
+
+        <div class="brand-subtitle">
+          Smart Access
+        </div>
+      </div>
+    </div>
+
+
+    <nav class="nav">
+
+      <button class="nav-item active" data-page="dashboard">
+        <span class="nav-icon">▦</span>
+        <span>總覽</span>
+      </button>
+
+      <button class="nav-item" data-page="people">
+        <span class="nav-icon">♙</span>
+        <span>人員</span>
+      </button>
+
+      <button class="nav-item" data-page="logs">
+        <span class="nav-icon">◷</span>
+        <span>通行紀錄</span>
+      </button>
+
+      <button class="nav-item" data-page="settings">
+        <span class="nav-icon">⚙</span>
+        <span>設定</span>
+      </button>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+      <div class="system-mini">
+
+        <div class="system-dot"></div>
+
+        <div>
+          <div class="system-title">
+            系統運作中
+          </div>
+
+          <div class="system-text">
+            AI Engine Online
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </aside>
+
+
+  <!-- =========================
+       Main
+  ========================== -->
+
+  <main class="main">
+
+    <!-- Topbar -->
+
+    <header class="topbar">
+
+      <div>
+
+        <div class="mobile-brand">
+          FaceGuard
+        </div>
+
+        <h1 id="pageTitle">
+          總覽
+        </h1>
+
+        <p id="pageDescription">
+          即時監控門禁狀態
+        </p>
+
+      </div>
+
+
+      <div class="topbar-right">
+
+        <div class="connection">
+
+          <span class="connection-dot"></span>
+
+          <span>
+            AI Online
+          </span>
+
+        </div>
+
+        <div class="avatar">
+          Z
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <!-- =========================
+         DASHBOARD
+    ========================== -->
+
+    <section id="page-dashboard" class="page active-page">
+
+      <!-- Status cards -->
+
+      <div class="stats-grid">
+
+        <div class="stat-card">
+
+          <div class="stat-icon blue">
+            ◉
+          </div>
+
+          <div>
+
+            <div class="stat-label">
+              今日通行
+            </div>
+
+            <div class="stat-value" id="todayAccess">
+              0
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon green">
+            ✓
+          </div>
+
+          <div>
+
+            <div class="stat-label">
+              已授權人員
+            </div>
+
+            <div class="stat-value" id="peopleCount">
+              0
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon orange">
+            !
+          </div>
+
+          <div>
+
+            <div class="stat-label">
+              拒絕次數
+            </div>
+
+            <div class="stat-value" id="deniedCount">
+              0
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-icon purple">
+            ⚡
+          </div>
+
+          <div>
+
+            <div class="stat-label">
+              AI 狀態
+            </div>
+
+            <div class="stat-value small" id="aiStatus">
+              啟動中
+            </div>
+
+            <div id="status" class="system-status">
+              ⏳ 尚未初始化
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Main dashboard -->
+
+      <div class="dashboard-grid">
+
+        <!-- Camera -->
+
+        <div class="panel camera-panel">
+
+          <div class="panel-header">
+
+            <div>
+
+              <h2>
+                即時辨識
+              </h2>
+
+              <p>
+                Camera / Face Recognition
+              </p>
+
+            </div>
+
+            <div id="cameraStatus" class="badge waiting">
+              等待中
+            </div>
+
+          </div>
+
+
+          <div class="camera-wrapper">
+
+            <video id="camera" autoplay playsinline muted></video>
+
+            <canvas id="canvas"></canvas>
+
+
+            <div id="cameraOverlay" class="camera-overlay">
+
+              <div class="scan-line"></div>
+
+              <div class="face-guide">
+
+                <span class="corner tl"></span>
+                <span class="corner tr"></span>
+                <span class="corner bl"></span>
+                <span class="corner br"></span>
+
+              </div>
+
+            </div>
+
+
+            <div class="camera-bottom">
+
+              <div class="camera-status">
+
+                <span id="cameraDot" class="status-dot"></span>
+
+                <span id="cameraText">
+                  正在啟動攝影機...
+                </span>
+
+              </div>
+
+              <div id="fps">
+                -- FPS
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="recognition-result">
+
+            <div class="result-avatar">
+              ?
+            </div>
+
+            <div class="result-info">
+
+              <div id="recognitionName" class="result-name">
+                尚未辨識
+              </div>
+
+              <div id="recognitionMessage" class="result-message">
+                請面向攝影機
+              </div>
+
+            </div>
+
+            <div id="similarity" class="similarity">
+              --
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- Right -->
+
+        <div class="right-column">
+
+          <!-- Door -->
+
+          <div class="panel door-panel">
+
+            <div class="panel-header">
+
+              <div>
+
+                <h2>
+                  門禁狀態
+                </h2>
+
+                <p>
+                  Access Control
+                </p>
+
+              </div>
+
+              <span id="doorIndicator" class="door-indicator locked">
+                已鎖定
+              </span>
+
+            </div>
+
+
+            <div class="door-content">
+
+              <div id="doorIcon" class="door-icon locked">
+                🔒
+              </div>
+
+              <div id="doorText" class="door-text">
+                門已鎖定
+              </div>
+
+              <div id="doorSubtext" class="door-subtext">
+                等待授權
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- Recent -->
+
+          <div class="panel">
+
+            <div class="panel-header">
+
+              <div>
+
+                <h2>
+                  最近紀錄
+                </h2>
+
+                <p>
+                  Recent Access
+                </p>
+
+              </div>
+
+              <button class="text-button" data-page="logs">
+                查看全部
+              </button>
+
+            </div>
+
+
+            <div id="recentLogs" class="logs">
+
+              <div class="empty">
+                尚無通行紀錄
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         PEOPLE
+    ========================== -->
+
+    <section id="page-people" class="page">
+
+      <div class="page-toolbar">
+
+        <div>
+
+          <h2>
+            人員管理
+          </h2>
+
+          <p>
+            管理可以通過門禁的人員
+          </p>
+
+        </div>
+
+        <button id="addPersonButton" class="primary-button">
+          <span>＋</span>
+          新增人員
+        </button>
+
+      </div>
+
+
+      <div id="peopleGrid" class="people-grid">
+
+        <div class="empty-card">
+          尚未建立人員
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         LOGS
+    ========================== -->
+
+    <section id="page-logs" class="page">
+
+      <div class="page-toolbar">
+
+        <div>
+
+          <h2>
+            通行紀錄
+          </h2>
+
+          <p>
+            查看所有門禁辨識結果
+          </p>
+
+        </div>
+
+        <button id="clearLogs" class="secondary-button">
+          清除紀錄
+        </button>
+
+      </div>
+
+
+      <div class="panel">
+
+        <div id="allLogs" class="all-logs">
+
+          <div class="empty">
+            尚無紀錄
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         SETTINGS
+    ========================== -->
+
+    <section id="page-settings" class="page">
+
+      <div class="page-toolbar">
+
+        <div>
+
+          <h2>
+            系統設定
+          </h2>
+
+          <p>
+            調整 FaceGuard 的辨識與門禁設定
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="settings-grid">
+
+        <div class="panel">
+
+          <h3>
+            🧠 AI 辨識
+          </h3>
+
+          <div class="setting-row">
+
+            <div>
+
+              <div class="setting-title">
+                相似度門檻
+              </div>
+
+              <div class="setting-description">
+                數值越高越嚴格
+              </div>
+
+            </div>
+
+            <div class="threshold-control">
+
+              <input id="threshold" type="range" min="0.4" max="0.95" step="0.01" value="0.65">
+
+              <span id="thresholdValue">
+                0.65
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="setting-row">
+
+            <div>
+
+              <div class="setting-title">
+                自動辨識
+              </div>
+
+              <div class="setting-description">
+                持續分析攝影機畫面
+              </div>
+
+            </div>
+
+            <label class="switch">
+
+              <input id="autoRecognition" type="checkbox" checked>
+
+              <span class="slider"></span>
+
+            </label>
+
+          </div>
+
+        </div>
+
+
+        <div class="panel">
+
+          <h3>
+            🚪 門禁
+          </h3>
+
+          <div class="setting-row">
+
+            <div>
+
+              <div class="setting-title">
+                自動開門
+              </div>
+
+              <div class="setting-description">
+                辨識成功後模擬開門
+              </div>
+
+            </div>
+
+            <label class="switch">
+
+              <input id="autoDoor" type="checkbox" checked>
+
+              <span class="slider"></span>
+
+            </label>
+
+          </div>
+
+
+          <div class="setting-row">
+
+            <div>
+
+              <div class="setting-title">
+                開門時間
+              </div>
+
+              <div class="setting-description">
+                模擬開門持續時間
+              </div>
+
+            </div>
+
+            <select id="doorDuration">
+
+              <option value="2">
+                2 秒
+              </option>
+
+              <option value="5" selected>
+                5 秒
+              </option>
+
+              <option value="10">
+                10 秒
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =========================
+       Add Person Modal
+  ========================== -->
+
+  <div id="personModal" class="modal hidden">
+
+    <div class="modal-backdrop"></div>
+
+    <div class="modal-box">
+
+      <div class="modal-header">
+
+        <div>
+
+          <h2 id="modalTitle">
+            新增人員
+          </h2>
+
+          <p id="modalSubtitle">
+            建立人臉辨識資料
+          </p>
+
+        </div>
+
+        <button id="closeModal" class="close-button">
+          ×
+        </button>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>
+          姓名
+        </label>
+
+        <input id="personName" type="text" placeholder="例如：之奇">
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>
+          人臉照片
+        </label>
+
+        <input id="personImages" type="file" accept="image/*" multiple>
+
+        <div class="upload-hint">
+          建議使用 3～10 張不同角度的照片
+        </div>
+
+      </div>
+
+
+      <div id="imagePreview" class="image-preview"></div>
+
+
+      <div id="modalStatus" class="modal-status"></div>
+
+
+      <div class="modal-actions">
+
+        <button id="cancelModal" class="secondary-button">
+          取消
+        </button>
+
+        <button id="savePerson" class="primary-button">
+          建立人員
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       Login Gate
+  ========================== -->
+
+  <div id="loginOverlay" class="modal hidden">
+
+    <div class="modal-backdrop"></div>
+
+    <div class="modal-box">
+
+      <div class="modal-header">
+
+        <div>
+
+          <h2>需要密碼</h2>
+
+          <p>這個系統需要密碼才能存取</p>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>密碼</label>
+
+        <input id="loginPassword" type="password" placeholder="輸入密碼">
+
+      </div>
+
+
+      <div id="loginStatus" class="modal-status"></div>
+
+
+      <div class="modal-actions">
+
+        <button id="loginSubmit" class="primary-button">登入</button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <script type="module" src="/src/main.js"></script>
+
+</body>
+
+</html>

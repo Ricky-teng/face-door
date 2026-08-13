@@ -1,0 +1,13 @@
+flask
+insightface
+onnxruntime
+opencv-python-headless
+numpy
+onnx
+tqdm
+requests
+scipy
+scikit-image
+coloredlogs
+cython
+easydict
