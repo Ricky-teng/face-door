@@ -90,6 +90,15 @@ const autoDoor =
 const doorDuration =
   document.getElementById("doorDuration");
 
+const kioskToggle =
+  document.getElementById("kioskToggle");
+
+const kioskToggleIcon =
+  document.getElementById("kioskToggleIcon");
+
+const kioskToggleLabel =
+  document.getElementById("kioskToggleLabel");
+
 const loginOverlay =
   document.getElementById("loginOverlay");
 
@@ -440,6 +449,65 @@ document
 
     }
   );
+
+
+// ========================================
+// Recognition Mode (Kiosk)
+// ========================================
+
+function setRecognitionMode(enabled) {
+
+  document.body.classList.toggle(
+    "recognition-mode",
+    enabled
+  );
+
+  if (enabled) {
+
+    switchPage("dashboard");
+
+    kioskToggleIcon.textContent =
+      "✕";
+
+  } else {
+
+    kioskToggleIcon.textContent =
+      "👁";
+
+  }
+
+  localStorage.setItem(
+    "faceguard_kiosk",
+    enabled ? "1" : "0"
+  );
+
+}
+
+
+kioskToggle.addEventListener(
+  "click",
+  () => {
+
+    const isActive =
+      document.body.classList.contains(
+        "recognition-mode"
+      );
+
+    setRecognitionMode(!isActive);
+
+  }
+);
+
+
+if (
+  localStorage.getItem(
+    "faceguard_kiosk"
+  ) === "1"
+) {
+
+  setRecognitionMode(true);
+
+}
 
 
 // ========================================
@@ -1786,6 +1854,103 @@ savePerson.addEventListener(
 // Settings
 // ========================================
 
+const SETTINGS_KEY =
+  "faceguard_settings";
+
+
+function loadSettings() {
+
+  let saved;
+
+  try {
+
+    saved = JSON.parse(
+      localStorage.getItem(
+        SETTINGS_KEY
+      )
+    );
+
+  } catch (error) {
+
+    saved = null;
+  }
+
+  if (!saved) {
+    return;
+  }
+
+  if (
+    typeof saved.threshold ===
+    "number"
+  ) {
+
+    threshold.value =
+      saved.threshold;
+
+    thresholdValue.textContent =
+      Number(
+        threshold.value
+      ).toFixed(2);
+
+  }
+
+  if (
+    typeof saved.autoRecognition ===
+    "boolean"
+  ) {
+
+    autoRecognition.checked =
+      saved.autoRecognition;
+
+  }
+
+  if (
+    typeof saved.autoDoor ===
+    "boolean"
+  ) {
+
+    autoDoor.checked =
+      saved.autoDoor;
+
+  }
+
+  if (saved.doorDuration) {
+
+    doorDuration.value =
+      saved.doorDuration;
+
+  }
+
+}
+
+
+function saveSettings() {
+
+  localStorage.setItem(
+    SETTINGS_KEY,
+    JSON.stringify({
+
+      threshold:
+        Number(threshold.value),
+
+      autoRecognition:
+        autoRecognition.checked,
+
+      autoDoor:
+        autoDoor.checked,
+
+      doorDuration:
+        doorDuration.value
+
+    })
+  );
+
+}
+
+
+loadSettings();
+
+
 threshold.addEventListener(
   "input",
   () => {
@@ -1795,7 +1960,27 @@ threshold.addEventListener(
         threshold.value
       ).toFixed(2);
 
+    saveSettings();
+
   }
+);
+
+
+autoRecognition.addEventListener(
+  "change",
+  saveSettings
+);
+
+
+autoDoor.addEventListener(
+  "change",
+  saveSettings
+);
+
+
+doorDuration.addEventListener(
+  "change",
+  saveSettings
 );
 
 

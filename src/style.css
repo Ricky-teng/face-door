@@ -1622,6 +1622,42 @@ input[type="text"] {
 
 
 /* =========================
+   Recognition Mode
+========================= */
+
+body.recognition-mode .sidebar {
+  display: none;
+}
+
+
+body.recognition-mode .main {
+  margin-left: 0;
+}
+
+
+body.recognition-mode .stats-grid,
+body.recognition-mode #recentLogsPanel,
+body.recognition-mode .mobile-brand,
+body.recognition-mode #pageDescription {
+  display: none;
+}
+
+
+body.recognition-mode .dashboard-grid {
+  grid-template-columns: minmax(0, 1.6fr) minmax(280px, 0.6fr);
+}
+
+
+body.recognition-mode #kioskToggleLabel::after {
+  content: "（點擊退出）";
+
+  color: var(--text-secondary);
+
+  font-weight: 400;
+}
+
+
+/* =========================
    Responsive
 ========================= */
 
