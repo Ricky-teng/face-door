@@ -205,9 +205,13 @@ let pendingCount = 0;
 
 const CONFIRM_COUNT = 2;
 
-const MIN_FACE_SCORE = 0.7;
+const MIN_FACE_SCORE = 0.5;
 
-const MIN_FACE_WIDTH_RATIO = 0.15;
+const MIN_FACE_WIDTH_RATIO = 0.1;
+
+const DETECT_INTERVAL = 500;
+
+let lastDetectTime = 0;
 
 let isRecognizing = false;
 
@@ -598,6 +602,23 @@ async function detectCamera() {
   }
 
 
+  const now = Date.now();
+
+  if (
+    now - lastDetectTime <
+    DETECT_INTERVAL
+  ) {
+
+    requestAnimationFrame(
+      detectCamera
+    );
+
+    return;
+  }
+
+  lastDetectTime = now;
+
+
   isDetecting = true;
 
 
@@ -770,16 +791,24 @@ async function detectCamera() {
 
 function captureFrame() {
 
+  const maxWidth = 800;
+
+  const scale =
+    Math.min(
+      1,
+      maxWidth / video.videoWidth
+    );
+
   const captureCanvas =
     document.createElement(
       "canvas"
     );
 
   captureCanvas.width =
-    video.videoWidth;
+    video.videoWidth * scale;
 
   captureCanvas.height =
-    video.videoHeight;
+    video.videoHeight * scale;
 
   captureCanvas
     .getContext("2d")
@@ -793,7 +822,7 @@ function captureFrame() {
 
   return captureCanvas.toDataURL(
     "image/jpeg",
-    0.85
+    0.8
   );
 
 }
